@@ -1,6 +1,6 @@
 [package]
 name = "chewie-crypto-gcp"
-version = "0.2.0"
+version = "0.3.0-pre"
 edition = "2024"
 description = "Cryptographic primitives and secret management for Rust applications"
 license = "MIT OR Apache-2.0"
