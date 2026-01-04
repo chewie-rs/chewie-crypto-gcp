@@ -1,0 +1,29 @@
+[package]
+name = "chewie-crypto-gcp"
+version = "0.1.0"
+edition = "2024"
+description = "Cryptographic primitives and secret management for Rust applications"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/chewie-rs/chewie-crypto-gcp"
+documentation = "https://docs.rs/chewie-crypto-gcp"
+keywords = ["crypto", "gcp", "kms", "secrets", "google-cloud"]
+categories = ["cryptography", "authentication"]
+readme = "README.md"
+
+[features]
+default = ["kms", "secretmanager"]
+kms = ["dep:google-cloud-kms-v1"]
+secretmanager = ["dep:google-cloud-secretmanager-v1"]
+
+[dependencies]
+bon = { version = "3.8", features = ["implied-bounds"] }
+bytes = { version = "1", default-features = false }
+chewie-crypto = { version = "0.1", default-features = false }
+google-cloud-kms-v1 = { version = "1", default-features = false, optional = true }
+google-cloud-secretmanager-v1 = { version = "1", default-features = false, optional = true }
+snafu = { version = "0.8", features = ["rust_1_81"] }
+
+[dev-dependencies]
+google-cloud-gax = "1"
+mockall = "0.14"
+tokio = { version = "1", default-features = false, features = ["test-util"] }
