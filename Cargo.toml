@@ -18,7 +18,7 @@ secretmanager = ["dep:google-cloud-secretmanager-v1"]
 [dependencies]
 bon = { version = "3.8", features = ["implied-bounds"] }
 bytes = { version = "1", default-features = false }
-chewie-crypto = { version = "0.1", default-features = false }
+chewie-crypto = { version = "0.2", default-features = false }
 google-cloud-kms-v1 = { version = "1", default-features = false, optional = true }
 google-cloud-secretmanager-v1 = { version = "1", default-features = false, optional = true }
 snafu = { version = "0.8", features = ["rust_1_81"] }

@@ -1,5 +1,5 @@
 use bytes::Bytes;
-use chewie_crypto::signer::Signer;
+use chewie_crypto::prelude::*;
 use chewie_crypto_gcp::kms::{AsymmetricJwsKey, SetupError};
 use google_cloud_gax::response::Response;
 use google_cloud_kms_v1::{
@@ -84,7 +84,7 @@ async fn test_asymmetric_sign_success() -> Result<(), Box<dyn std::error::Error>
 
     let client = KeyManagementService::from_stub(mock);
     let key = AsymmetricJwsKey::new(client, resource_name).await?;
-    let signed_bytes = AsymmetricJwsKey::sign(&key, b"data").await?;
+    let signed_bytes = key.sign(b"data").await?;
 
     assert_eq!(signed_bytes, expected_signed_bytes);
     Ok(())

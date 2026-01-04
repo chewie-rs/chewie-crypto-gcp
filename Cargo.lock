@@ -116,9 +116,9 @@ checksum = "613afe47fcd5fac7ccf1db93babcb082c5994d996f20b8b159f2ad1658eb5724"
 
 [[package]]
 name = "chewie-crypto"
-version = "0.1.0"
+version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ad0c55c9fb46117d9bb9529343a68157a00a6823cd3861f07528f9a76532b25a"
+checksum = "e26f72bd48c8e71dafba0d7b13e1bdaf9e26573a240228f652c22a22f7c43cdb"
 dependencies = [
  "base64",
  "bytes",

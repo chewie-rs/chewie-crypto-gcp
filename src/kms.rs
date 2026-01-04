@@ -1,7 +1,7 @@
 //! Cloud KMS signing with automatic algorithm discovery.
 
 use bytes::Bytes;
-use chewie_crypto::signer::Signer;
+use chewie_crypto::signer::{JwsSigner, Signer};
 use google_cloud_kms_v1::{
     client::KeyManagementService, model::crypto_key_version::CryptoKeyVersionAlgorithm,
 };
@@ -39,9 +39,8 @@ pub enum SigningError {
 struct AlgorithmInfo {
     /// A human readable algorithm name.
     algorithm: &'static str,
-    #[allow(dead_code)]
     /// The JWS-compatible algorithm name.
-    jwt_alg: &'static str,
+    jws_algorithm: &'static str,
 }
 
 /// An asymmetric key that supports JWS, stored in Google Cloud KMS.
@@ -98,6 +97,12 @@ impl Signer for AsymmetricJwsKey {
     }
 }
 
+impl JwsSigner for AsymmetricJwsKey {
+    fn jws_algorithm(&self) -> &str {
+        self.algorithm_info.jws_algorithm
+    }
+}
+
 async fn get_algorithm_info_for_resource(
     kms_client: &KeyManagementService,
     resource_name: &str,
@@ -128,39 +133,39 @@ fn get_algorithm_info(algorithm: &CryptoKeyVersionAlgorithm) -> Option<Algorithm
         // RSA-PSS SHA-256 variants (2048/3072/4096 bit keys)
         RsaSignPss2048Sha256 | RsaSignPss3072Sha256 | RsaSignPss4096Sha256 => Some(AlgorithmInfo {
             algorithm: "RSA-PSS-SHA256",
-            jwt_alg: "PS256",
+            jws_algorithm: "PS256",
         }),
         // RSA-PSS SHA-512 variant
         RsaSignPss4096Sha512 => Some(AlgorithmInfo {
             algorithm: "RSA-PSS-SHA512",
-            jwt_alg: "PS512",
+            jws_algorithm: "PS512",
         }),
         // RSA PKCS#1 v1.5 SHA-256 variants (2048/3072/4096 bit keys)
         RsaSignPkcs12048Sha256 | RsaSignPkcs13072Sha256 | RsaSignPkcs14096Sha256 => {
             Some(AlgorithmInfo {
                 algorithm: "RSA-PKCS1-SHA256",
-                jwt_alg: "RS256",
+                jws_algorithm: "RS256",
             })
         }
         // RSA PKCS#1 v1.5 SHA-512 variant
         RsaSignPkcs14096Sha512 => Some(AlgorithmInfo {
             algorithm: "RSA-PKCS1-SHA512",
-            jwt_alg: "RS512",
+            jws_algorithm: "RS512",
         }),
         // ECDSA P-256
         EcSignP256Sha256 => Some(AlgorithmInfo {
             algorithm: "ECDSA-P256",
-            jwt_alg: "ES256",
+            jws_algorithm: "ES256",
         }),
         // ECDSA P-384
         EcSignP384Sha384 => Some(AlgorithmInfo {
             algorithm: "ECDSA-P384",
-            jwt_alg: "ES384",
+            jws_algorithm: "ES384",
         }),
         // EdDSA (Ed25519)
         EcSignEd25519 => Some(AlgorithmInfo {
             algorithm: "EdDSA-Ed25519",
-            jwt_alg: "Ed25519",
+            jws_algorithm: "Ed25519",
         }),
         _ => None,
     }
